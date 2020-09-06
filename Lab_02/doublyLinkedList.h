@@ -20,8 +20,7 @@ template <class Type>
 class doublyLinkedList
 {
 public:
-    const doublyLinkedList<Type>& operator=
-                           (const doublyLinkedList<Type> &);
+    const doublyLinkedList<Type>& operator=(const doublyLinkedList<Type> &otherList);
       //Overload the assignment operator.
 
     void initializeList();
@@ -115,8 +114,8 @@ private:
 template <class Type>
 doublyLinkedList<Type>::doublyLinkedList()
 {
-    first= nullptr;
-    last = nullptr;
+    first = nullptr;
+    last  = nullptr;
     count = 0;
 }
 
@@ -346,33 +345,87 @@ void doublyLinkedList<Type>::deleteNode(const Type& deleteItem)
     }//end else
 }//end deleteNode
 
+
+//Written by Edward Cruz
+    //Original idea from https://stackoverflow.com/questions/34963158/doubly-linked-list-template-copy-constructor-assignment-operator
+    //Found: 09/05/2020
 template <class Type>
 void doublyLinkedList<Type>::copyList(const doublyLinkedList<Type>& otherList)
 {
-	cout << "The definition of this function is left as an exercise." << endl;
-	cout << "See Programming Execrise 11." << endl;
+    if (otherList.isEmptyList()) {
+        cout << "there is nothing in this list to copy..." << endl;
+    } else {
+        this->first = new nodeType<Type>(otherList.first);
+        nodeType<Type> *current = otherList.first->next;
+        nodeType<Type> *trailCurrent = this->first;
+        this->count++;
+        while (current != nullptr) {
+            current->next = new nodeType<Type>(trailCurrent, nullptr, current);
+            current = current->next;
+            trailCurrent = trailCurrent->next;
+            this->count++;
+        }
+        this->last = current;
+        this->count++;
+    }
 }
 
 template <class Type>
 doublyLinkedList<Type>::doublyLinkedList(const doublyLinkedList<Type>& otherList)
-{
-	  cout << "The definition of the copy constructor is left as an exercise." << endl;
-	  cout << "See Programming Execrise 11." << endl;
+{   
+    if (otherList.isEmptyList()) {
+        this->first = otherList->first;
+        this->last  = otherList->last;
+        this->count = otherList->count;
+    } else {
+        this->first = new nodeType<Type>(otherList.first);
+        nodeType<Type> *current = otherList.first->next;
+        nodeType<Type> *trailCurrent = this->first;
+        this->count++;
+        while (current != nullptr) {
+            current->next = new nodeType<Type>(trailCurrent, nullptr, current);
+            current = current->next;
+            trailCurrent = trailCurrent->next;
+            this->count++;
+        }
+        this->last = current;
+        this->count++;
+    }
 }
 
 template <class Type>
-const doublyLinkedList<Type>& doublyLinkedList<Type>::operator=
-							(const doublyLinkedList<Type> &)
+const doublyLinkedList<Type>& doublyLinkedList<Type>::operator=(const doublyLinkedList<Type> &otherList)
 {
-	cout << "Overloading the assignment operator is left as an exercise." << endl;
-	cout << "See Programming Execrise 11." << endl;
+    if (otherList.isEmptyList()) {
+        this->first = otherList->first;
+        this->last  = otherList->last;
+        this->count = otherList->count;
+    } else {
+        this->first = new nodeType<Type>(otherList.first);
+        nodeType<Type> *current = otherList.first->next;
+        nodeType<Type> *trailCurrent = this->first;
+        this->count++;
+        while (current != nullptr) {
+            current->next = new nodeType<Type>(trailCurrent, nullptr, current);
+            current = current->next;
+            trailCurrent = trailCurrent->next;
+            this->count++;
+        }
+        this->last = current;
+        this->count++;
+    }
 }
 
 template <class Type>
 doublyLinkedList<Type>::~doublyLinkedList()
 {
-	cout << "Definition of the destructor is left as an exercise." << endl;
-	cout << "See Programming Execrise 11." << endl;
+    nodeType<Type> *current = this->first;
+    while (current != nullptr) {
+        nodeType<Type> *toDelete = current;
+        current = current->next;
+        delete toDelete;
+    }
+    first = last = nullptr;  // I've never seen this used before and I '_REALLY_' like it.
 }
 
 #endif
