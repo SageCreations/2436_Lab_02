@@ -98,16 +98,18 @@ public:
       //destructor
       //Postcondition: The list object is destroyed.
 
+    void copyList(const doublyLinkedList<Type>& otherList); 
+      //Function to make a copy of otherList.
+      //Postcondition: A copy of otherList is created and
+      //               assigned to this list.
+
 protected:
     int count;
     nodeType<Type> *first; //pointer to the first node
     nodeType<Type> *last;  //pointer to the last node
 
 private:
-    void copyList(const doublyLinkedList<Type>& otherList); 
-      //Function to make a copy of otherList.
-      //Postcondition: A copy of otherList is created and
-      //               assigned to this list.
+    
 };
 
 
@@ -185,8 +187,7 @@ void doublyLinkedList<Type>::reversePrint() const
 }//end reversePrint
 
 template <class Type>
-bool doublyLinkedList<Type>::
-                       search(const Type& searchItem) const
+bool doublyLinkedList<Type>::search(const Type& searchItem) const
 {
     bool found = false;
     nodeType<Type> *current; //pointer to traverse the list
@@ -353,20 +354,28 @@ template <class Type>
 void doublyLinkedList<Type>::copyList(const doublyLinkedList<Type>& otherList)
 {
     if (otherList.isEmptyList()) {
+        this->count = 0;
+        this->first = nullptr;
+        this->last  = nullptr;
+        
         cout << "there is nothing in this list to copy..." << endl;
     } else {
-        this->first = new nodeType<Type>(otherList.first);
-        nodeType<Type> *current = otherList.first->next;
-        nodeType<Type> *trailCurrent = this->first;
-        this->count++;
-        while (current != nullptr) {
-            current->next = new nodeType<Type>(trailCurrent, nullptr, current);
+        this->first = nullptr;
+        this->last  = nullptr;
+        this->count = 0;
+
+        
+        nodeType<Type> *current = otherList.first;
+        nodeType<Type> *node = first;
+        while (current != nullptr)
+        {
+            node = current;
+            this->insert(node->info);
+
             current = current->next;
-            trailCurrent = trailCurrent->next;
             this->count++;
         }
         this->last = current;
-        this->count++;
     }
 }
 
@@ -374,22 +383,25 @@ template <class Type>
 doublyLinkedList<Type>::doublyLinkedList(const doublyLinkedList<Type>& otherList)
 {   
     if (otherList.isEmptyList()) {
-        this->first = otherList->first;
-        this->last  = otherList->last;
-        this->count = otherList->count;
+        this->count = 0;
+        this->first = nullptr;
+        this->last  = nullptr;
     } else {
-        this->first = new nodeType<Type>(otherList.first);
-        nodeType<Type> *current = otherList.first->next;
-        nodeType<Type> *trailCurrent = this->first;
-        this->count++;
-        while (current != nullptr) {
-            current->next = new nodeType<Type>(trailCurrent, nullptr, current);
+        this->first = nullptr;
+        this->last  = nullptr;
+        this->count = 0;
+
+        nodeType<Type> *current = otherList.first;
+        nodeType<Type> *node = first;
+        while (current != nullptr)
+        {
+            node = current;
+            this->insert(node->info);
+
             current = current->next;
-            trailCurrent = trailCurrent->next;
             this->count++;
         }
         this->last = current;
-        this->count++;
     }
 }
 
@@ -397,23 +409,30 @@ template <class Type>
 const doublyLinkedList<Type>& doublyLinkedList<Type>::operator=(const doublyLinkedList<Type> &otherList)
 {
     if (otherList.isEmptyList()) {
-        this->first = otherList->first;
-        this->last  = otherList->last;
-        this->count = otherList->count;
+        this->count = 0;
+        this->first = nullptr;
+        this->last  = nullptr;
+        
+        cout << "there is nothing in this list to copy..." << endl;
     } else {
-        this->first = new nodeType<Type>(otherList.first);
-        nodeType<Type> *current = otherList.first->next;
-        nodeType<Type> *trailCurrent = this->first;
-        this->count++;
-        while (current != nullptr) {
-            current->next = new nodeType<Type>(trailCurrent, nullptr, current);
+        this->first = nullptr;
+        this->last  = nullptr;
+        this->count = 0;
+
+        
+        nodeType<Type> *current = otherList.first;
+        nodeType<Type> *node = first;
+        while (current != nullptr)
+        {
+            node = current;
+            this->insert(node->info);
+
             current = current->next;
-            trailCurrent = trailCurrent->next;
             this->count++;
         }
         this->last = current;
-        this->count++;
     }
+    return *this;
 }
 
 template <class Type>
@@ -425,7 +444,7 @@ doublyLinkedList<Type>::~doublyLinkedList()
         current = current->next;
         delete toDelete;
     }
-    first = last = nullptr;  // I've never seen this used before and I '_REALLY_' like it.
+    this->first = this->last = nullptr;  // I've never seen this used before and I '_REALLY_' like it.
 }
 
 #endif
